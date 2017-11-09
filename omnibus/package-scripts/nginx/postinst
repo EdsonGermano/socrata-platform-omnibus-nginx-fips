@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# Perform necessary nginx setup steps
+# after package is installed.
+#
+
+PROGNAME=`basename $0`
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+INSTALL_DIR=/opt/nginx
+
+mkdir -p /etc/nginx/conf.d
+for conf in $(ls ${INSTALL_DIR}/conf/); do
+  ln -sf ${INSTALL_DIR}/conf/${conf} /etc/nginx/${conf}
+done
+
+ln -sf ${INSTALL_DIR}/init.d/nginx /etc/init.d/nginx || \
+  error_exit "Cannot link nginx to /etc/init.d/nginx"
+ln -sf ${INSTALL_DIR}/sbin/nginx /usr/sbin/nginx || \
+  error_exit "Cannot link nginx to /usr/sbin/nginx"
+
+echo "Thank you for installing nginx!"
+
+exit 0

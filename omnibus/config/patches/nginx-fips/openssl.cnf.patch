@@ -1,0 +1,19 @@
+--- a/opt/nginx/embedded/ssl/openssl.cnf 2017-12-06 20:25:39.000000000 +0000
++++ b/opt/nginx/embedded/ssl/openssl.cnf 2017-12-06 21:40:11.508986323 +0000
+@@ -12,6 +12,16 @@
+ #oid_file		= $ENV::HOME/.oid
+ oid_section		= new_oids
+
++openssl_conf		= openssl_conf_section
++
++[ openssl_conf_section ]
++
++alg_section		= algs
++
++[ algs ]
++
++fips_mode		= yes
++
+ # To use this configuration file with the "-extfile" option of the
+ # "openssl x509" utility, name here the section containing the
+ # X.509v3 extensions to use:

@@ -1,0 +1,24 @@
+---
+driver:
+  name: dokken
+  privileged: true
+  chef_version: latest
+  binds:
+    - <%= File.expand_path('omnibus') %>:/tmp/omnibus
+
+transport:
+  name: dokken
+
+provisioner:
+  name: dokken
+
+platforms:
+  - name: ubuntu-16.04
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /lib/systemd/systemd
+
+suites:
+  - name: default
+    run_list:
+      - recipe[build]

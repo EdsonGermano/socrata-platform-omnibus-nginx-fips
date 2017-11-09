@@ -5,40 +5,24 @@ driver:
     cpus: 2
     memory: 2048
   synced_folders:
-    - ['.', '/home/vagrant/nginx']
+    - ['omnibus', '/tmp/omnibus']
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: 12.4.1
 
 platforms:
-  - name: centos-7.1
-    run_list: yum-epel::default
-  - name: centos-6.6
-    run_list: yum-epel::default
-  - name: centos-5.11
-    run_list: yum-epel::default
-  - name: debian-7.8
-    run_list: apt::default
-  - name: debian-6.0.10
-    run_list: apt::default
-  - name: freebsd-10.1
-    run_list: freebsd::portsnap
-  - name: freebsd-9.3
-    run_list:
-      - freebsd::portsnap
-      - freebsd::pkgng
-  - name: ubuntu-14.04
-    run_list: apt::default
-  - name: ubuntu-12.04
-    run_list: apt::default
+  - name: ubuntu-16.04
 
 suites:
   - name: default
-    run_list: omnibus::default
+    run_list:
+      - recipe[build]
     attributes:
       omnibus:
-        build_user:          vagrant
-        build_user_group:    vagrant
-        build_user_password: vagrant
-        install_dir:         /opt/nginx
+        build_iteration: 1
+        openssl_fips:
+          version: 2.0.16
+        # openssl:
+        #  version: 1.0.2n # 1.0.2n is already the default version
+        nginx:
+          version: 1.12.2

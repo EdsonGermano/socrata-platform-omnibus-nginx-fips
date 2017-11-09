@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Perform necessary nginx setup steps
+# prior to installing package.
+#
+
+PROGNAME=`basename $0`
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+INSTALL_DIR=/opt/nginx
+
+# Don't delete these files unless they're still the original symlinks.
+for conf in $(ls ${INSTALL_DIR}/conf); do
+  if [ -L /etc/nginx/${conf} ]; then
+    rm -f /etc/nginx/${conf}
+  fi
+done
+
+rmdir --ignore-fail-on-non-empty /etc/nginx/conf.d
+rmdir --ignore-fail-on-non-empty /etc/nginx
+
+for file in "/usr/sbin/nginx /etc/init.d/nginx"; do
+  if [ -L /etc/nginx/${file} ]; then
+    rm -f /etc/nginx/${file}
+  fi
+end
+
+exit 0
