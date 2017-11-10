@@ -1,23 +1,30 @@
+---
 driver:
-  name: vagrant
-  forward_agent: yes
-  customize:
-    cpus: 2
-    memory: 2048
-  synced_folders:
-    - ['omnibus', '/tmp/omnibus']
+  name: dokken
+  privileged: true
+  chef_version: latest
+  binds:
+    - <%= File.expand_path('omnibus') %>:/tmp/omnibus
+
+transport:
+  name: dokken
 
 provisioner:
-  name: chef_zero
+  name: dokken
 
 platforms:
   - name: ubuntu-16.04
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /lib/systemd/systemd
 
 suites:
   - name: default
     run_list:
       - recipe[build]
     attributes:
+      # Ohai can't find an ipaddress in Dokken
+      ipaddress: 127.0.0.1
       omnibus:
         build_iteration: 1
         openssl_fips:

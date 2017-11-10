@@ -45,6 +45,6 @@ build do
 
   # TODO: Add support for Upstart and/or Systemd.
   mkdir "#{install_dir}/init.d"
-  copy "#{project.files_path}/sysvinit/nginx.#{platform_family}",
+  copy "#{project.files_path}/sysvinit/nginx.#{ohai['platform_family']}",
        "#{install_dir}/init.d/nginx"
 end
