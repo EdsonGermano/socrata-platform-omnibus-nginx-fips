@@ -1,0 +1,39 @@
+language: ruby
+
+branches:
+  only:
+    - master
+
+sudo: required
+
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
+
+services:
+  - docker
+
+install:
+  - eval "$(chef shell-init bash)"
+  - bundle install
+
+stages:
+  - name: test
+  - name: build
+  - name: deploy
+    if: NOT type = cron AND branch = master
+
+jobs:
+  include:
+    - stage: test
+      script: rake
+    - stage: build
+      env:
+        - SUITE=default PLATFORM=ubuntu-1604
+      script: kitchen test $SUITE-$PLATFORM
+    - stage: deploy
+      provider: script
+      script: echo "Skipping the deploy step for now"

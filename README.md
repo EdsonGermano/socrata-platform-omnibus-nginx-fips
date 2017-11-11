@@ -1,5 +1,9 @@
 # Nginx Omnibus Project
 
+[![Build Status](https://img.shields.io/travis/socrata-platform/omnibus-nginx-fips.svg)][travis]
+
+[travis]: https://travis-ci.org/socrata-platform/omnibus-nginx-fips
+
 This project creates full-stack platform-specific packages for Nginx with an
 embedded OpenSSL built and configured for FIPS mode.
 
