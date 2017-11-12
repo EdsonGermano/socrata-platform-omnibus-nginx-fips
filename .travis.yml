@@ -35,5 +35,6 @@ jobs:
         - SUITE=default PLATFORM=ubuntu-1604
       script: kitchen test $SUITE-$PLATFORM
     - stage: deploy
-      provider: script
-      script: echo "Skipping the deploy step for now"
+      deploy:
+        provider: script
+        script: echo "Skipping the deploy step for now"

@@ -28,6 +28,15 @@ when 'debian'
     source File.join(node['omnibus']['staging_dir'],
                      "pkg/nginx_#{version}-#{iteration}_amd64.deb")
   end
+when 'rhel'
+  rpm_package 'nginx' do
+    version = node['omnibus']['nginx']['version']
+    iteration = node['omnibus']['build_iteration']
+    rhel = node['platform_version'].to_i
+
+    source File.join(node['omnibus']['staging_dir'],
+                     "pkg/nginx-#{version}-#{iteration}.el#{rhel}.x86_64.rpm")
+  end
 else
   raise(Chef::Exceptions::UnsupportedPlatform, 'Unsupported platform')
 end
