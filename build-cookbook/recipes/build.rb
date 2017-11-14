@@ -2,7 +2,7 @@
 
 #
 # Cookbook Name:: build
-# Recipe:: _build
+# Recipe:: build
 #
 # Copyright 2017, Socrata, Inc.
 #
@@ -19,9 +19,7 @@
 # limitations under the License.
 #
 
-package 'nginx' do
-  action platform_family?('debian') ? :purge : :remove
-end
+include_recipe '::_clean'
 
 apt_update 'default' if platform_family?('debian')
 
@@ -48,12 +46,7 @@ omnibus_build 'nginx' do
   live_stream true
 end
 
-execute 'Copy the build artifacts to the staging directory' do
+execute 'Copy the build artifacts back to the staging directory' do
   command "rsync -a #{node['omnibus']['build_dir']}/pkg/ " \
           "#{node['omnibus']['staging_dir']}/pkg/"
-end
-
-directory '/opt/nginx' do
-  recursive true
-  action :delete
 end

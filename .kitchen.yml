@@ -11,6 +11,17 @@ transport:
 
 provisioner:
   name: dokken
+  attributes:
+    # Ohai can't find an ipaddress in Dokken
+    ipaddress: 127.0.0.1
+    omnibus:
+      build_iteration: 1
+      openssl_fips:
+        version: 2.0.16
+      # openssl:
+      #  version: 1.0.2n # 1.0.2n is already the default version
+      nginx:
+        version: 1.12.2
 
 verifier:
   name: inspec
@@ -18,15 +29,33 @@ verifier:
   sudo: true
 
 platforms:
-  - name: ubuntu-16.04
+  - name: ubuntu-builder
     driver:
       image: ubuntu:16.04
       pid_one_command: /lib/systemd/systemd
-  - name: centos-7
+  - name: ubuntu-16.04-verifier
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /lib/systemd/systemd
+  - name: ubuntu-14.04-verifier
+    driver:
+      image: ubuntu:14.04
+      pid_one_command: /sbin/init
+  - name: centos-7-builder
     driver:
       image: centos:7
       pid_one_command: /lib/systemd/systemd
-  - name: centos-6
+  - name: centos-7-verifier
+    driver:
+      image: centos:7
+      pid_one_command: /lib/systemd/systemd
+  - name: centos-6-builder
+    driver:
+      image: centos:6
+      pid_one_command: /sbin/init
+      intermediate_instructions:
+        - RUN yum -y install upstart initscripts
+  - name: centos-6-verifier
     driver:
       image: centos:6
       pid_one_command: /sbin/init
@@ -34,17 +63,23 @@ platforms:
         - RUN yum -y install upstart initscripts
 
 suites:
-  - name: default
+  - name: build
     run_list:
-      - recipe[build]
-    attributes:
-      # Ohai can't find an ipaddress in Dokken
-      ipaddress: 127.0.0.1
-      omnibus:
-        build_iteration: 1
-        openssl_fips:
-          version: 2.0.16
-        # openssl:
-        #  version: 1.0.2n # 1.0.2n is already the default version
-        nginx:
-          version: 1.12.2
+      - recipe[build::build]
+    verifier:
+      inspec_tests:
+    excludes:
+      - ubuntu-16.04-verifier
+      - ubuntu-14.04-verifier
+      - centos-7-verifier
+      - centos-6-verifier
+  - name: verify
+    run_list:
+      - recipe[build::verify]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    excludes:
+      - ubuntu-builder
+      - centos-7-builder
+      - centos-6-builder

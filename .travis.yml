@@ -23,8 +23,6 @@ install:
 stages:
   - name: test
   - name: build
-  - name: deploy
-    if: NOT type = cron AND branch = master
 
 jobs:
   include:
@@ -32,9 +30,7 @@ jobs:
       script: rake
     - stage: build
       env:
-        - SUITE=default PLATFORM=ubuntu-1604
-      script: kitchen test $SUITE-$PLATFORM
-    - stage: deploy
-      deploy:
-        provider: script
-        script: echo "Skipping the deploy step for now"
+        - PLATFORM=ubuntu
+        - PLATFORM=centos-7
+        - PLATFORM=centos-6
+      script: kitchen test -$PLATFORM-

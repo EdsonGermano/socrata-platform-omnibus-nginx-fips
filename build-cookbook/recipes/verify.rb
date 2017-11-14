@@ -2,7 +2,7 @@
 
 #
 # Cookbook Name:: build
-# Recipe:: _verify
+# Recipe:: verify
 #
 # Copyright 2017, Socrata, Inc.
 #
@@ -18,6 +18,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+include_recipe '::clean'
+
+package 'nginx' do
+  action platform_family?('debian') ? :purge : :remove
+end
+
+directory '/opt/nginx' do
+  recursive true
+  action :delete
+end
 
 case node['platform_family']
 when 'debian'
