@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe '::clean'
+include_recipe '::_clean'
 
 package 'nginx' do
   action platform_family?('debian') ? :purge : :remove
