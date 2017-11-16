@@ -19,5 +19,5 @@
 # limitations under the License.
 #
 
-include_recipe '::_build'
-include_recipe '::_verify'
+include_recipe '::build'
+include_recipe '::verify'
