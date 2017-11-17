@@ -12,18 +12,60 @@ error_exit()
   exit 1
 }
 
+init_system()
+{
+  systemctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "systemd"
+    return 0
+  fi
+
+  initctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "upstart"
+    return 0
+  fi
+
+  echo "sysvinit"
+  return 0
+}
+
+link_or_fail()
+{
+  dest=$1
+  link=$2
+
+  ln -sf $dest $link || error_exit "Cannot link $link to $dest"
+}
+
 INSTALL_DIR=/opt/nginx
 
 mkdir -p /etc/nginx/conf.d
 for conf in $(ls ${INSTALL_DIR}/conf/); do
-  ln -sf ${INSTALL_DIR}/conf/${conf} /etc/nginx/${conf}
+  link_or_fail ${INSTALL_DIR}/conf/${conf} /etc/nginx/${conf}
 done
 
-ln -sf ${INSTALL_DIR}/init.d/nginx /etc/init.d/nginx || \
-  error_exit "Cannot link nginx to /etc/init.d/nginx"
-ln -sf ${INSTALL_DIR}/sbin/nginx /usr/sbin/nginx || \
-  error_exit "Cannot link nginx to /usr/sbin/nginx"
+link_or_fail ${INSTALL_DIR}/sbin/nginx /usr/sbin/nginx
 
-echo "Thank you for installing nginx!"
+case $(init_system) in
+  systemd)
+    link_or_fail ${INSTALL_DIR}/init/systemd /lib/systemd/system/nginx.service
+  ;;
+  upstart)
+    link_or_fail ${INSTALL_DIR}/init/upstart /etc/init/nginx.conf
+  ;;
+  sysvinit)
+    if [ -e /etc/redhat-release ]; then
+      family=rhel
+    elif [ -e /etc/lsb-release ]; then
+      family=debian
+    else
+      error_exit "Unsupported platform"
+    fi
+    link_or_fail ${INSTALL_DIR}/init/sysvinit.${family} /etc/init.d/nginx
+  ;;
+esac
+
+echo "Thank you for installing Nginx!"
 
 exit 0

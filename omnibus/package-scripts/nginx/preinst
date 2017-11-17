@@ -4,4 +4,4 @@
 # before package is installed.
 #
 
-echo "You're about to install nginx!"
+echo "You're about to install Nginx!"

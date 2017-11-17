@@ -43,8 +43,14 @@ build do
   link "#{install_dir}/embedded/conf/*", "#{install_dir}/conf/"
   delete "#{install_dir}/conf/*.default"
 
-  # TODO: Add support for Upstart and/or Systemd.
-  mkdir "#{install_dir}/init.d"
-  copy "#{project.files_path}/sysvinit/nginx.#{ohai['platform_family']}",
-       "#{install_dir}/init.d/nginx"
+  mkdir File.join(install_dir, 'init')
+  %w[
+    systemd
+    sysvinit.debian
+    sysvinit.rhel
+    upstart
+  ].each do |f|
+    copy File.join(project.files_path, 'init', f),
+         File.join(install_dir, 'init', f)
+  end
 end

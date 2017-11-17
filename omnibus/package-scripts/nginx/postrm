@@ -4,6 +4,6 @@
 # after package is uninstalled.
 #
 
-echo "nginx has been uninstalled!"
+echo "Nginx has been uninstalled!"
 
 exit 0

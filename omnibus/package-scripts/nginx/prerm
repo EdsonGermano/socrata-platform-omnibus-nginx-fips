@@ -12,22 +12,54 @@ error_exit()
   exit 1
 }
 
+init_system()
+{
+  systemctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "systemd"
+    return 0
+  fi
+
+  initctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "upstart"
+    return 0
+  fi
+
+  echo "sysvinit"
+  return 0
+}
+
+delete_if_link()
+{
+  path=$1
+
+  if [ -L $path ]; then
+    rm -f $path
+  fi
+}
+
 INSTALL_DIR=/opt/nginx
 
 # Don't delete these files unless they're still the original symlinks.
 for conf in $(ls ${INSTALL_DIR}/conf); do
-  if [ -L /etc/nginx/${conf} ]; then
-    rm -f /etc/nginx/${conf}
-  fi
+  delete_if_link "/etc/nginx/${conf}"
 done
 
 rmdir --ignore-fail-on-non-empty /etc/nginx/conf.d
 rmdir --ignore-fail-on-non-empty /etc/nginx
 
-for file in "/usr/sbin/nginx /etc/init.d/nginx"; do
-  if [ -L /etc/nginx/${file} ]; then
-    rm -f /etc/nginx/${file}
-  fi
-end
+delete_if_link /usr/sbin/nginx
+case $(init_system)
+  systemd)
+    delete_if_link /lib/systemd/system/nginx.service
+  ;;
+  upstart)
+    delete_if_link /etc/init/nginx.conf
+  ;;
+  sysvinit)
+    delete_if_link /etc/init.d/nginx
+  ;;
+esac
 
 exit 0
