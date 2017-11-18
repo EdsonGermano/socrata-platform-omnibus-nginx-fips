@@ -6,7 +6,7 @@
 # processname: nginx
 # config: /etc/nginx/nginx.conf
 # config: /etc/sysconfig/nginx
-# pidfile: /var/run/nginx.pid
+# pidfile: /opt/nginx/embedded/logs/nginx.pid
 # description: nginx is an HTTP and reverse proxy server
 #
 ### BEGIN INIT INFO
@@ -37,7 +37,7 @@ nginx=${NGINX:-/usr/sbin/nginx}
 prog=`/bin/basename $nginx`
 conffile=${CONFFILE:-/etc/nginx/nginx.conf}
 lockfile=${LOCKFILE:-/var/lock/subsys/nginx}
-pidfile=${PIDFILE:-/var/run/nginx.pid}
+pidfile=${PIDFILE:-/opt/nginx/embedded/logs/nginx.pid}
 SLEEPSEC=${SLEEPSEC:-1}
 UPGRADEWAITLOOPS=${UPGRADEWAITLOOPS:-5}
 CHECKSLEEP=${CHECKSLEEP:-3}
@@ -114,7 +114,7 @@ rh_status() {
 check_reload() {
     templog=`/bin/mktemp --tmpdir nginx-check-reload-XXXXXX.log`
     trap '/bin/rm -f $templog' 0
-    /usr/bin/tail --pid=$$ -n 0 --follow=name /var/log/nginx/error.log > $templog &
+    /usr/bin/tail --pid=$$ -n 0 --follow=name /opt/nginx/embedded/logs/error.log > $templog &
     /bin/sleep 1
     /bin/echo -n $"Sending reload signal to $prog: "
     killproc -p ${pidfile} ${prog} -HUP
