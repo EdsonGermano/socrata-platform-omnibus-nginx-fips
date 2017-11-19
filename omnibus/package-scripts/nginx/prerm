@@ -50,6 +50,7 @@ rmdir --ignore-fail-on-non-empty /etc/nginx/conf.d
 rmdir --ignore-fail-on-non-empty /etc/nginx
 
 delete_if_link /usr/sbin/nginx
+
 case $(init_system)
   systemd)
     delete_if_link /lib/systemd/system/nginx.service

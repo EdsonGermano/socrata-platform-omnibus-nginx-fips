@@ -43,14 +43,5 @@ build do
   link "#{install_dir}/embedded/conf/*", "#{install_dir}/conf/"
   delete "#{install_dir}/conf/*.default"
 
-  mkdir File.join(install_dir, 'init')
-  %w[
-    systemd
-    sysvinit.debian
-    sysvinit.rhel
-    upstart
-  ].each do |f|
-    copy File.join(project.files_path, 'init', f),
-         File.join(install_dir, 'init', f)
-  end
+  copy File.join(project.files_path, 'init'), File.join(install_dir, 'init')
 end

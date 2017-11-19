@@ -49,10 +49,11 @@ link_or_fail ${INSTALL_DIR}/sbin/nginx /usr/sbin/nginx
 
 case $(init_system) in
   systemd)
-    link_or_fail ${INSTALL_DIR}/init/systemd /lib/systemd/system/nginx.service
+    link_or_fail ${INSTALL_DIR}/init/systemd/nginx.service \
+      /lib/systemd/system/nginx.service
   ;;
   upstart)
-    link_or_fail ${INSTALL_DIR}/init/upstart /etc/init/nginx.conf
+    link_or_fail ${INSTALL_DIR}/init/upstart/nginx.conf /etc/init/nginx.conf
   ;;
   sysvinit)
     if [ -e /etc/redhat-release ]; then
@@ -62,7 +63,7 @@ case $(init_system) in
     else
       error_exit "Unsupported platform"
     fi
-    link_or_fail ${INSTALL_DIR}/init/sysvinit.${family} /etc/init.d/nginx
+    link_or_fail ${INSTALL_DIR}/init/sysvinit/nginx.${family} /etc/init.d/nginx
   ;;
 esac
 

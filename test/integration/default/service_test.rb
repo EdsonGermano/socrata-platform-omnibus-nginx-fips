@@ -10,20 +10,20 @@ svc_manager = if command('systemctl --help').exit_status == 0
 
 case svc_manager
 when 'systemd'
-  describe file('/lib/systemd/system/nginx.servce') do
-    its(:link_path) { should eq('/opt/nginx/init/systemd') }
+  describe file('/lib/systemd/system/nginx.service') do
+    its(:link_path) { should eq('/opt/nginx/init/systemd/nginx.service') }
   end
 when 'upstart'
   describe file('/etc/init/nginx.conf') do
-    its(:link_path) { should eq('/opt/nginx/init/upstart') }
+    its(:link_path) { should eq('/opt/nginx/init/upstart/nginx.conf') }
   end
 when 'sysvinit'
   describe file('/etc/init.d/nginx') do
     its(:link_path) do
       dest = if os.debian?
-               '/opt/nginx/init/sysvinit.debian'
+               '/opt/nginx/init/sysvinit/nginx.debian'
              elsif os.redhat?
-               '/opt/nginx/init/sysvinit.rhel'
+               '/opt/nginx/init/sysvinit/nginx.rhel'
              end
       should eq(dest)
     end
