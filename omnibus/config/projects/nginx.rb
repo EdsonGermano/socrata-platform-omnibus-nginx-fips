@@ -35,4 +35,10 @@ override :nginx, version: ENV['NGINX_VERSION'] unless ENV['NGINX_VERSION'].nil?
 exclude '**/.git'
 exclude '**/bundler/git'
 
-Omnibus::Config.fips_mode true
+package :deb do
+  vendor 'Socrata, Inc <sysadmin@socrata.com>'
+end
+
+package :rpm do
+  vendor 'Socrata, Inc <sysadmin@socrata.com>'
+end

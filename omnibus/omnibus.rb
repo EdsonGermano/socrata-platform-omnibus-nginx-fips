@@ -4,4 +4,5 @@
 # of configurable options, please see the documentation for +omnibus/config.rb+.
 #
 
+fips_mode true
 append_timestamp false
