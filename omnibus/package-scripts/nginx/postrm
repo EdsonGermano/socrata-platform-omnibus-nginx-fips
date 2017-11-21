@@ -4,6 +4,14 @@
 # after package is uninstalled.
 #
 
+# Delete any empty directories, leaving behind logs and temp files.
+rmdir --ignore-fail-on-non-empty /etc/nginx/*
+rmdir --ignore-fail-on-non-empty /etc/nginx
+
+rmdir --ignore-fail-on-non-empty /opt/nginx/embedded/*
+rmdir --ignore-fail-on-non-empty /opt/nginx/embedded
+rmdir --ignore-fail-on-non-empty /opt/nginx
+
 echo "Nginx has been uninstalled!"
 
 exit 0

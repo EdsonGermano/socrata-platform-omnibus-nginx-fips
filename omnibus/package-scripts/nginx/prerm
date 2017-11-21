@@ -41,26 +41,27 @@ delete_if_link()
 
 INSTALL_DIR=/opt/nginx
 
+case $(init_system) in
+  systemd)
+    systemctl stop nginx
+    systemctl disable nginx
+    delete_if_link /lib/systemd/system/nginx.service
+  ;;
+  upstart)
+    initctl stop nginx
+    delete_if_link /etc/init/nginx.conf
+  ;;
+  sysvinit)
+    /etc/init.d/nginx stop
+    delete_if_link /etc/init.d/nginx
+  ;;
+esac
+
+delete_if_link /usr/sbin/nginx
+
 # Don't delete these files unless they're still the original symlinks.
 for conf in $(ls ${INSTALL_DIR}/conf); do
   delete_if_link "/etc/nginx/${conf}"
 done
-
-rmdir --ignore-fail-on-non-empty /etc/nginx/conf.d
-rmdir --ignore-fail-on-non-empty /etc/nginx
-
-delete_if_link /usr/sbin/nginx
-
-case $(init_system)
-  systemd)
-    delete_if_link /lib/systemd/system/nginx.service
-  ;;
-  upstart)
-    delete_if_link /etc/init/nginx.conf
-  ;;
-  sysvinit)
-    delete_if_link /etc/init.d/nginx
-  ;;
-esac
 
 exit 0

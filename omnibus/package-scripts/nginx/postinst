@@ -40,7 +40,10 @@ link_or_fail()
 
 INSTALL_DIR=/opt/nginx
 
-mkdir -p /etc/nginx/conf.d
+mkdir -p /etc/nginx/conf.d \
+  /etc/nginx/sites-available \
+  /etc/nginx/sites-enabled
+
 for conf in $(ls ${INSTALL_DIR}/conf/); do
   link_or_fail ${INSTALL_DIR}/conf/${conf} /etc/nginx/${conf}
 done
@@ -54,6 +57,7 @@ case $(init_system) in
   ;;
   upstart)
     link_or_fail ${INSTALL_DIR}/init/upstart/nginx.conf /etc/init/nginx.conf
+    initctl reload-configuration
   ;;
   sysvinit)
     if [ -e /etc/redhat-release ]; then
