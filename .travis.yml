@@ -33,4 +33,4 @@ jobs:
         - PLATFORM=ubuntu
         - PLATFORM=centos-7
         - PLATFORM=centos-6
-      script: kitchen test build-$PLATFORM- && kitchen test verify-$PLATFORM
+      script: kitchen test build-$PLATFORM- && kitchen test verify-$PLATFORM && kitchen test remove-$PLATFORM

@@ -21,6 +21,8 @@
 
 include_recipe '::_clean'
 
+package 'openssl'
+
 package 'nginx' do
   action platform_family?('debian') ? :purge : :remove
 end
@@ -53,5 +55,9 @@ else
 end
 
 service 'nginx' do
+  # RHEL 6 needs some help to know to use Upstart.
+  if platform_family?('rhel') && node['platform_version'].to_i == 6
+    provider Chef::Provider::Service::Upstart
+  end
   action %i[enable start]
 end

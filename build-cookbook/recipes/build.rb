@@ -21,8 +21,6 @@
 
 include_recipe '::_clean'
 
-apt_update 'default' if platform_family?('debian')
-
 include_recipe 'omnibus'
 
 package 'rsync'

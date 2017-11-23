@@ -2,7 +2,7 @@
 
 #
 # Cookbook Name:: build
-# Recipe:: _clean
+# Recipe:: remove
 #
 # Copyright 2017, Socrata, Inc.
 #
@@ -19,24 +19,13 @@
 # limitations under the License.
 #
 
-apt_update 'default' if platform_family?('debian')
+include_recipe '::verify'
 
-package 'nginx' do
-  action platform_family?('debian') ? :purge : :remove
-end
-
-%w[/opt/nginx /etc/nginx].each do |d|
-  directory d do
-    recursive true
-    action :delete
-  end
-end
-
-%w[
-  /usr/sbin/nginx
-  /etc/init.d/nginx
-  /etc/init/nginx.conf
-  /lib/systemd/system/nginx.service
-].each do |f|
-  file(f) { action :delete }
+# A package resource ought to work here, but something gets cached from the
+# _clean recipe where Chef thinks it's already uninstalled.
+case node['platform_family']
+when 'debian'
+  dpkg_package('nginx') { action :purge }
+when 'rhel'
+  rpm_package('nginx') { action :remove } 
 end
