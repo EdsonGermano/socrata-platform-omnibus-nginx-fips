@@ -1,7 +1,3 @@
-AllCops:
-  Exclude:
-    - omnibus/config/software/nginx.rb
-
 Naming/FileName:
   Exclude:
     - omnibus/config/software/nginx-fips.rb

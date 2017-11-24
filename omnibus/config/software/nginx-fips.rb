@@ -34,14 +34,4 @@ build do
   patch source: 'openssl.cnf.patch',
         target: "#{install_dir}/embedded/ssl/openssl.cnf",
         env: env
-
-  delete "#{install_dir}/bin"
-  mkdir "#{install_dir}/sbin"
-  link "#{install_dir}/embedded/sbin/nginx", "#{install_dir}/sbin/nginx"
-
-  mkdir "#{install_dir}/conf"
-  link "#{install_dir}/embedded/conf/*", "#{install_dir}/conf/"
-  delete "#{install_dir}/conf/*.default"
-
-  copy File.join(project.files_path, 'init'), File.join(install_dir, 'init')
 end
