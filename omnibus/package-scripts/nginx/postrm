@@ -1,16 +1,17 @@
 #!/bin/sh
 #
-# Perform necessary nginx removal steps
-# after package is uninstalled.
+# Perform necessary nginx removal steps after package is uninstalled.
 #
 
-# Delete any empty directories, leaving behind logs and temp files.
-rmdir --ignore-fail-on-non-empty /etc/nginx/*
-rmdir --ignore-fail-on-non-empty /etc/nginx
+if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
+  # Delete any empty directories, leaving behind logs and temp files.
+  rmdir --ignore-fail-on-non-empty /etc/nginx/*
+  rmdir --ignore-fail-on-non-empty /etc/nginx
 
-rmdir --ignore-fail-on-non-empty /opt/nginx/embedded/*
-rmdir --ignore-fail-on-non-empty /opt/nginx/embedded
-rmdir --ignore-fail-on-non-empty /opt/nginx
+  rmdir --ignore-fail-on-non-empty /opt/nginx/embedded/*
+  rmdir --ignore-fail-on-non-empty /opt/nginx/embedded
+  rmdir --ignore-fail-on-non-empty /opt/nginx
+fi
 
 echo "Nginx has been uninstalled!"
 

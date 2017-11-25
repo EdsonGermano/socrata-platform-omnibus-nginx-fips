@@ -1,7 +1,6 @@
 #!/bin/sh
 #
-# Perform necessary nginx setup steps
-# prior to installing package.
+# Perform necessary nginx setup steps prior to uninstalling package.
 #
 
 PROGNAME=`basename $0`
@@ -41,27 +40,29 @@ delete_if_link()
 
 INSTALL_DIR=/opt/nginx
 
-case $(init_system) in
-  systemd)
-    systemctl stop nginx
-    systemctl disable nginx
-    delete_if_link /lib/systemd/system/nginx.service
-  ;;
-  upstart)
-    initctl stop nginx
-    delete_if_link /etc/init/nginx.conf
-  ;;
-  sysvinit)
-    /etc/init.d/nginx stop
-    delete_if_link /etc/init.d/nginx
-  ;;
-esac
+if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
+  case $(init_system) in
+    systemd)
+      systemctl stop nginx
+      systemctl disable nginx
+      delete_if_link /lib/systemd/system/nginx.service
+    ;;
+    upstart)
+      initctl stop nginx
+      delete_if_link /etc/init/nginx.conf
+    ;;
+    sysvinit)
+      /etc/init.d/nginx stop
+      delete_if_link /etc/init.d/nginx
+    ;;
+  esac
 
-delete_if_link /usr/sbin/nginx
+  delete_if_link /usr/sbin/nginx
 
-# Don't delete these files unless they're still the original symlinks.
-for conf in $(ls ${INSTALL_DIR}/conf); do
-  delete_if_link "/etc/nginx/${conf}"
-done
+  # Don't delete these files unless they're still the original symlinks.
+  for conf in $(ls ${INSTALL_DIR}/conf); do
+    delete_if_link "/etc/nginx/${conf}"
+  done
+fi
 
 exit 0
