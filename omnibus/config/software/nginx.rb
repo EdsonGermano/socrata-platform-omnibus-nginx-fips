@@ -46,7 +46,8 @@ build do
     '--with-debug',
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
-    "--with-ld-opt=-L#{install_dir}/embedded/lib"
+    "--with-ld-opt=-L#{install_dir}/embedded/lib",
+    '--pid-path=/var/run/nginx.pid'
   ].join(' '), env: env
 
   make "-j #{workers}", env: env
