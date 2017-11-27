@@ -107,7 +107,7 @@ do_upgrade() {
 do_checkreload() {
     templog=`/bin/mktemp --tmpdir nginx-check-reload-XXXXXX.log`
     trap '/bin/rm -f $templog' 0
-    /usr/bin/tail --pid=$$ -n 0 --follow=name /opt/nginx/embedded/logs/error.log > $templog &
+    /usr/bin/tail --pid=$$ -n 0 --follow=name /var/log/nginx/error.log > $templog &
     /bin/sleep 1
     start-stop-daemon --stop --signal HUP --quiet --pidfile $PIDFILE
     /bin/sleep $CHECKSLEEP

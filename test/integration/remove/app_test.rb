@@ -8,10 +8,6 @@ describe file('/usr/sbin/nginx') do
   it { should_not exist }
 end
 
-describe command('ls /opt/nginx/') do
-  its(:stdout) { should eq("embedded\n") }
-end
-
-describe command('ls /opt/nginx/embedded/') do
-  its(:stdout) { should eq("logs\n") }
+describe directory('/opt/nginx') do
+  it { should_not exist }
 end

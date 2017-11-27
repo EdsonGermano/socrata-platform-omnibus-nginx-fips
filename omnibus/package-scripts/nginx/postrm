@@ -4,12 +4,10 @@
 #
 
 if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
-  # Delete any empty directories, leaving behind logs and temp files.
+  # Delete any empty directories.
+  rmdir --ignore-fail-on-non-empty /var/log/nginx
   rmdir --ignore-fail-on-non-empty /etc/nginx/*
   rmdir --ignore-fail-on-non-empty /etc/nginx
-
-  rmdir --ignore-fail-on-non-empty /opt/nginx/embedded/*
-  rmdir --ignore-fail-on-non-empty /opt/nginx/embedded
   rmdir --ignore-fail-on-non-empty /opt/nginx
 fi
 

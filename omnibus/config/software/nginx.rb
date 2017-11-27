@@ -47,14 +47,13 @@ build do
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
-    '--pid-path=/var/run/nginx.pid'
+    '--pid-path=/var/run/nginx.pid',
+    '--http-log-path=/var/log/nginx/access.log',
+    '--error-log-path=/var/log/nginx/error.log'
   ].join(' '), env: env
 
   make "-j #{workers}", env: env
   make 'install', env: env
-
-  # Ensure the logs directory is available on rebuild from git cache
-  touch "#{install_dir}/embedded/logs/.gitkeep"
 
   # Remove the default bin dir and put a symlink to embedded/sbin/nginx in
   # sbin/nginx.
