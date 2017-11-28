@@ -40,16 +40,17 @@ build do
   command [
     './configure',
     "--prefix=#{install_dir}/embedded",
-    '--with-http_ssl_module',
-    '--with-http_stub_status_module',
-    '--with-ipv6',
-    '--with-debug',
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
+    '--conf-path=/etc/nginx/nginx.conf',
     '--pid-path=/var/run/nginx.pid',
     '--http-log-path=/var/log/nginx/access.log',
-    '--error-log-path=/var/log/nginx/error.log'
+    '--error-log-path=/var/log/nginx/error.log',
+    '--with-ipv6',
+    '--with-debug',
+    '--with-http_ssl_module',
+    '--with-http_stub_status_module'
   ].join(' '), env: env
 
   make "-j #{workers}", env: env
