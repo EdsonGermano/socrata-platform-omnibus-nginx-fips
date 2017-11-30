@@ -37,6 +37,11 @@ relative_path "nginx-#{version}"
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
+  # Set the embedded OpenSSL to default to FIPS mode.
+  patch source: 'openssl.cnf.patch',
+        target: "#{install_dir}/embedded/ssl/openssl.cnf",
+        env: env
+
   command [
     './configure',
     "--prefix=#{install_dir}/embedded",
