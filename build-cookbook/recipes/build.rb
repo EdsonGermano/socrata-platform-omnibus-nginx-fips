@@ -40,7 +40,8 @@ omnibus_build 'nginx' do
   project_dir node['omnibus']['build_dir']
   environment(OPENSSL_FIPS_VERSION: node['omnibus']['openssl_fips']['version'],
               OPENSSL_VERSION: node['omnibus']['openssl']['version'],
-              NGINX_VERSION: node['omnibus']['nginx']['version'])
+              NGINX_VERSION: node['omnibus']['nginx']['version'],
+              NGINX_SHA256: node['omnibus']['nginx']['sha256'])
   live_stream true
 end
 

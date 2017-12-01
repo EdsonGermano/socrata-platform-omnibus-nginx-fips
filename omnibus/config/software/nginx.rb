@@ -17,7 +17,7 @@
 #
 
 name 'nginx'
-default_version '1.12.2'
+default_version ENV['NGINX_VERSION']
 
 dependency 'pcre'
 dependency 'openssl'
@@ -27,10 +27,7 @@ license_file 'LICENSE'
 
 source url: "http://nginx.org/download/nginx-#{version}.tar.gz"
 
-version('1.12.2') do
-  source sha256: '305f379da1d5fb5aefa79e45c829852ca6983c7cd2a79328f8e084a324' \
-                 'cf0416'
-end
+version ENV['NGINX_VERSION'] { source sha256: ENV['NGINX_SHA256'] }
 
 relative_path "nginx-#{version}"
 
