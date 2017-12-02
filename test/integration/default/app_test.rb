@@ -4,10 +4,12 @@ describe package('nginx') do
   it { should be_installed }
 end
 
-describe directory('/opt/nginx') do
-  its(:owner) { should eq('root') }
-  its(:group) { should eq('root') }
-  its(:mode) { should cmp('0755') }
+%w[/opt/nginx /var/log/nginx /var/cache/nginx].each do |d|
+  describe directory(d) do
+    its(:owner) { should eq('root') }
+    its(:group) { should eq('root') }
+    its(:mode) { should cmp('0755') }
+  end
 end
 
 describe command('openssl md5 /etc/passwd') do

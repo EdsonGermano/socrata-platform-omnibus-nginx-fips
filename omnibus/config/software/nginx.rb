@@ -50,11 +50,11 @@ build do
     '--lock-path=/var/lock/nginx.lock',
     '--http-log-path=/var/log/nginx/access.log',
     '--error-log-path=/var/log/nginx/error.log',
-    '--http-client-body-temp-path=/var/lib/nginx/body',
-    '--http-fastcgi-temp-path=/var/lib/nginx/fastcgi',
-    '--http-proxy-temp-path=/var/lib/nginx/proxy',
-    '--http-scgi-temp-path=/var/lib/nginx/scgi',
-    '--http-uwsgi-temp-path=/var/lib/nginx/uwsgi'
+    '--http-client-body-temp-path=/var/cache/nginx/body',
+    '--http-fastcgi-temp-path=/var/cache/nginx/fastcgi',
+    '--http-proxy-temp-path=/var/cache/nginx/proxy',
+    '--http-scgi-temp-path=/var/cache/nginx/scgi',
+    '--http-uwsgi-temp-path=/var/cache/nginx/uwsgi'
     '--with-ipv6',
     '--with-debug',
     '--with-http_ssl_module',

@@ -8,6 +8,8 @@ describe file('/usr/sbin/nginx') do
   it { should_not exist }
 end
 
-describe directory('/opt/nginx') do
-  it { should_not exist }
+%w[/opt/nginx /var/log/nginx /var/cache/nginx].each do |d|
+  describe directory(d) do
+    it { should_not exist }
+  end
 end
