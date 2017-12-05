@@ -36,7 +36,7 @@ fi
 nginx=${NGINX:-/usr/sbin/nginx}
 prog=`/bin/basename $nginx`
 conffile=${CONFFILE:-/etc/nginx/nginx.conf}
-lockfile=${LOCKFILE:-/var/lock/subsys/nginx}
+lockfile=${LOCKFILE:-/var/lock/nginx.lock}
 pidfile=${PIDFILE:-/var/run/nginx.pid}
 SLEEPSEC=${SLEEPSEC:-1}
 UPGRADEWAITLOOPS=${UPGRADEWAITLOOPS:-5}
