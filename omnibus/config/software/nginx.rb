@@ -45,7 +45,6 @@ build do
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
-    '--conf-path=/etc/nginx/nginx.conf',
     '--pid-path=/var/run/nginx.pid',
     '--lock-path=/var/lock/nginx.lock',
     '--http-log-path=/var/log/nginx/access.log',
@@ -83,6 +82,7 @@ build do
   ].join(' '), env: env
 
   # TODO: What about these other configure flags?
+  # --conf-path=/etc/nginx/nginx.conf
   # --modules-path=/usr/lib/nginx/modules
   # --user=nginx
   # --group=nginx
