@@ -88,6 +88,14 @@ build do
   # --group=nginx
 
   make "-j #{workers}", env: env
+
+  # Omnibus doesn't currently support adding directories; see:
+  # https://github.com/chef/omnibus/issues/464
+  command 'sudo mkdir /var/log/nginx'
+  command "sudo chown #{ENV['USER']}:#{ENV['USER']} /var/log/nginx"
+  touch '/var/log/nginx/.keep'
+  project.extra_package_file '/var/log/nginx/.keep'
+
   make 'install', env: env
 
   # Remove the default bin dir and put a symlink to embedded/sbin/nginx in

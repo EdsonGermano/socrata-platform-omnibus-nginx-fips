@@ -42,7 +42,6 @@ INSTALL_DIR=/opt/nginx
 mkdir -p /etc/nginx/conf.d \
   /etc/nginx/sites-available \
   /etc/nginx/sites-enabled \
-  /var/log/nginx \
   /var/cache/nginx
 
 for conf in $(ls ${INSTALL_DIR}/conf/); do

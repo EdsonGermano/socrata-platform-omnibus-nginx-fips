@@ -25,7 +25,7 @@ package 'nginx' do
   action platform_family?('debian') ? :purge : :remove
 end
 
-%w[/opt/nginx /etc/nginx].each do |d|
+%w[/opt/nginx /etc/nginx /var/log/nginx /var/cache/nginx].each do |d|
   directory d do
     recursive true
     action :delete

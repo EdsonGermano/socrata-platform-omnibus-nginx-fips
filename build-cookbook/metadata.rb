@@ -13,5 +13,6 @@ source_url 'https://github.com/socrata-platform/nginx-build'
 issues_url 'https://github.com/socrata-platform/nginx-build/issues'
 
 depends 'omnibus'
+depends 'sudo'
 
 supports 'ubuntu'

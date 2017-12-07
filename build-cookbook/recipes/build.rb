@@ -22,6 +22,12 @@
 include_recipe '::_clean'
 
 include_recipe 'omnibus'
+include_recipe 'sudo'
+
+sudo 'Omnibus user' do
+  user node['omnibus']['build_user']
+  nopasswd true
+end
 
 package 'rsync'
 
