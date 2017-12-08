@@ -36,7 +36,16 @@ describe command('/usr/sbin/nginx -V') do
   end
 end
 
-%w[/opt/nginx /var/log/nginx /var/cache/nginx].each do |d|
+%w[
+  /opt/nginx
+  /var/log/nginx
+  /var/cache/nginx
+  /var/cache/nginx/client_temp
+  /var/cache/nginx/fastcgi_temp
+  /var/cache/nginx/proxy_temp
+  /var/cache/nginx/scgi_temp
+  /var/cache/nginx/uwsgi_temp
+].each do |d|
   describe directory(d) do
     its(:owner) { should eq('root') }
     its(:group) { should eq('root') }

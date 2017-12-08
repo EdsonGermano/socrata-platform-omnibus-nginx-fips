@@ -91,10 +91,21 @@ build do
 
   # Omnibus doesn't currently support adding directories; see:
   # https://github.com/chef/omnibus/issues/464
-  command 'sudo mkdir /var/log/nginx'
-  command "sudo chown #{ENV['USER']}:#{ENV['USER']} /var/log/nginx"
-  touch '/var/log/nginx/.keep'
-  project.extra_package_file '/var/log/nginx/.keep'
+  %w[
+    /var/log/nginx
+    /var/cache/nginx
+    /var/cache/nginx/client_temp
+    /var/cache/nginx/fastcgi_temp
+    /var/cache/nginx/proxy_temp
+    /var/cache/nginx/scgi_temp
+    /var/cache/nginx/uwsgi_temp
+  ].each do |dir|
+    command "sudo mkdir #{dir}"
+    command "sudo chown #{ENV['USER']}:#{ENV['USER']} #{dir}"
+    next if dir == '/var/cache/nginx'
+    touch File.join(dir, '.keep')
+    project.extra_package_file File.join(dir, '.keep')
+  end
 
   make 'install', env: env
 
