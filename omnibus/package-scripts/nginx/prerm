@@ -57,12 +57,12 @@ if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
     ;;
   esac
 
-  delete_if_link /usr/sbin/nginx
-
   # Don't delete these files unless they're still the original symlinks.
   for conf in $(ls ${INSTALL_DIR}/conf); do
     delete_if_link "/etc/nginx/${conf}"
   done
+
+  rmdir --ignore-fail-on-non-empty /var/cache/nginx/*
 fi
 
 exit 0

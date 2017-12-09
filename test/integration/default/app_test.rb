@@ -32,7 +32,7 @@ describe command('/usr/sbin/nginx -V') do
     --with-stream_ssl_module
     --with-stream_ssl_preread_module
   ].each do |flag|
-    its(:stdout) { should include(flag) }
+    its(:stderr) { should include(flag) }
   end
 end
 
@@ -40,16 +40,21 @@ end
   /opt/nginx
   /var/log/nginx
   /var/cache/nginx
-  /var/cache/nginx/client_temp
-  /var/cache/nginx/fastcgi_temp
-  /var/cache/nginx/proxy_temp
-  /var/cache/nginx/scgi_temp
-  /var/cache/nginx/uwsgi_temp
 ].each do |d|
   describe directory(d) do
+    it { should exist }
     its(:owner) { should eq('root') }
     its(:group) { should eq('root') }
     its(:mode) { should cmp('0755') }
+  end
+end
+
+%w[client_temp fastcgi_temp proxy_temp scgi_temp uwsgi_temp].each do |d|
+  describe directory(File.join('/var/cache/nginx', d)) do
+    it { should exist }
+    its(:owner) { should eq('nobody') }
+    its(:group) { should eq('root') }
+    its(:mode) { should cmp('0700') }
   end
 end
 

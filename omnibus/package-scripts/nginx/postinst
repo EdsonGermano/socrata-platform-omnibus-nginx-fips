@@ -47,8 +47,6 @@ for conf in $(ls ${INSTALL_DIR}/conf/); do
   link_or_fail ${INSTALL_DIR}/conf/${conf} /etc/nginx/${conf}
 done
 
-link_or_fail ${INSTALL_DIR}/sbin/nginx /usr/sbin/nginx
-
 case $(init_system) in
   systemd)
     link_or_fail ${INSTALL_DIR}/init/systemd/nginx.service \

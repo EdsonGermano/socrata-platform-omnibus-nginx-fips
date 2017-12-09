@@ -94,16 +94,9 @@ build do
   %w[
     /var/log/nginx
     /var/cache/nginx
-    /var/cache/nginx/client_temp
-    /var/cache/nginx/fastcgi_temp
-    /var/cache/nginx/proxy_temp
-    /var/cache/nginx/scgi_temp
-    /var/cache/nginx/uwsgi_temp
   ].each do |dir|
     command "sudo mkdir #{dir}"
-    command "sudo chown #{ENV['USER']}:#{ENV['USER']} #{dir}"
-    next if dir == '/var/cache/nginx'
-    touch File.join(dir, '.keep')
+    command "sudo touch #{File.join(dir, '.keep')}"
     project.extra_package_file File.join(dir, '.keep')
   end
 
@@ -114,6 +107,8 @@ build do
   delete "#{install_dir}/bin"
   mkdir "#{install_dir}/sbin"
   link "#{install_dir}/embedded/sbin/nginx", "#{install_dir}/sbin/nginx"
+  command "sudo ln -s #{install_dir}/sbin/nginx /usr/sbin/nginx"
+  project.extra_package_file '/usr/sbin/nginx'
 
   # Put symlinks to embedded/conf/* in conf/*.
   mkdir "#{install_dir}/conf"
