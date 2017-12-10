@@ -3,13 +3,6 @@
 # Perform necessary nginx removal steps after package is uninstalled.
 #
 
-if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
-  # Delete any empty directories.
-  rmdir --ignore-fail-on-non-empty /etc/nginx/*
-  rmdir --ignore-fail-on-non-empty /etc/nginx
-  rmdir --ignore-fail-on-non-empty /opt/nginx
-fi
-
 echo "Nginx has been uninstalled!"
 
 exit 0

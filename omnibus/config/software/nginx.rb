@@ -94,8 +94,11 @@ build do
   %w[
     /var/log/nginx
     /var/cache/nginx
+    /etc/nginx/conf.d
+    /etc/nginx/sites-available
+    /etc/nginx/sites-enabled
   ].each do |dir|
-    command "sudo mkdir #{dir}"
+    command "sudo mkdir -p #{dir}"
     command "sudo touch #{File.join(dir, '.keep')}"
     project.extra_package_file File.join(dir, '.keep')
   end
