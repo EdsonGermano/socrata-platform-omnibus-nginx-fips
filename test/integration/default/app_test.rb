@@ -40,6 +40,7 @@ end
   /opt/nginx
   /var/log/nginx
   /var/cache/nginx
+  /opt/nginx/embedded/modules
 ].each do |d|
   describe directory(d) do
     it { should exist }

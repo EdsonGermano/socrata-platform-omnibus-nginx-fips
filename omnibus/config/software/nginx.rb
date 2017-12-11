@@ -83,7 +83,6 @@ build do
 
   # TODO: What about these other configure flags?
   # --conf-path=/etc/nginx/nginx.conf
-  # --modules-path=/usr/lib/nginx/modules
   # --user=nginx
   # --group=nginx
 
@@ -97,6 +96,7 @@ build do
     /etc/nginx/conf.d
     /etc/nginx/sites-available
     /etc/nginx/sites-enabled
+    /etc/nginx/modules
   ].each do |dir|
     command "sudo mkdir -p #{dir}"
     command "sudo touch #{File.join(dir, '.keep')}"
@@ -104,6 +104,10 @@ build do
   end
 
   make 'install', env: env
+
+  mkdir "#{install_dir}/embedded/modules"
+  touch "#{install_dir}/embedded/modules/.keep"
+  project.extra_package_file "#{install_dir}/embedded/modules/.keep"
 
   # Remove the default bin dir and put a symlink to embedded/sbin/nginx in
   # sbin/nginx.

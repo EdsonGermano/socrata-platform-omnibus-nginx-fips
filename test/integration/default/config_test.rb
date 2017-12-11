@@ -6,17 +6,17 @@ describe directory('/etc/nginx') do
   its(:mode) { should cmp('0755') }
 end
 
-%w[conf.d sites-available sites-enabled].each do |d|
+%w[conf.d sites-available sites-enabled modules].each do |d|
   describe directory(File.join('/etc/nginx', d)) do
     it { should exist }
     its(:owner) { should eq('root') }
     its(:group) { should eq('root') }
     its(:mode) { should cmp('0755') }
   end
-end
 
-describe command('ls /etc/nginx/conf.d') do
-  its(:stdout) { should eq('') }
+  describe command("ls /etc/nginx/#{d}/") do
+    its(:stdout) { should eq('') }
+  end
 end
 
 %w[
