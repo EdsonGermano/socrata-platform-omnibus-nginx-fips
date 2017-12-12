@@ -4,6 +4,11 @@ describe package('nginx') do
   it { should be_installed }
 end
 
+describe file('/usr/sbin/nginx') do
+  it { should exist }
+  its(:link_path) { should eq('/opt/nginx/embedded/sbin/nginx') }
+end
+
 describe command('/usr/sbin/nginx -V') do
   %w[
     --with-threads

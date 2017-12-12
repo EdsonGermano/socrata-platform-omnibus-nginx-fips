@@ -53,3 +53,20 @@ end
 package :rpm do
   vendor 'Socrata, Inc <sysadmin@socrata.com>'
 end
+
+# Patch Omnibus' copy_file method to make it support symlinks instead of
+# copying them over as files.
+Omnibus::Util.class_eval do
+  def copy_file(source, destination)
+    if File.directory?(destination)
+      destination = File.join(destination, File.basename(source))
+    end
+    log.debug(log_key) { "Copying `#{source}' to `#{destination}'" }
+    if File.symlink?(source)
+      FileUtils.copy_entry(source, destination)
+    else
+      FileUtils.cp(source, destination)
+    end
+    destination
+  end
+end
