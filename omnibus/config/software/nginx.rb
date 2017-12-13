@@ -117,10 +117,23 @@ build do
   command "sudo ln -s #{install_dir}/sbin/nginx /usr/sbin/nginx"
   project.extra_package_file '/usr/sbin/nginx'
 
-  # Put symlinks to embedded/conf/* in conf/*.
+  # Put symlinks to embedded/conf/* in conf/* and /etc/nginx/*..
   mkdir "#{install_dir}/conf"
-  link "#{install_dir}/embedded/conf/*", "#{install_dir}/conf/"
-  delete "#{install_dir}/conf/*.default"
+  %w[
+    fastcgi.conf
+    fastcgi_params
+    koi-utf
+    koi-win
+    mime.types
+    nginx.conf
+    scgi_params
+    uwsgi_params
+    win-utf
+  ].each do |c|
+    link "#{install_dir}/embedded/conf/#{c}", "#{install_dir}/conf/#{c}"
+    command "sudo ln -s #{install_dir}/conf/#{c} /etc/nginx/#{c}"
+    project.extra_package_file "/etc/nginx/#{c}"
+  end
 
   # Copy all the init scripts into the project directory.
   copy File.join(project.files_path, 'init'), File.join(install_dir, 'init')

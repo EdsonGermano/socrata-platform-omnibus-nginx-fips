@@ -6,6 +6,27 @@ describe directory('/etc/nginx') do
   its(:mode) { should cmp('0755') }
 end
 
+describe command('ls /etc/nginx/') do
+  its(:stdout) do
+    expected = <<-EXPECTED.gsub(/^ +/, '')
+      conf.d
+      fastcgi.conf
+      fastcgi_params
+      koi-utf
+      koi-win
+      mime.types
+      modules
+      nginx.conf
+      scgi_params
+      sites-available
+      sites-enabled
+      uwsgi_params
+      win-utf
+    EXPECTED
+    should eq(expected)
+  end
+end
+
 %w[conf.d sites-available sites-enabled modules].each do |d|
   describe directory(File.join('/etc/nginx', d)) do
     it { should exist }

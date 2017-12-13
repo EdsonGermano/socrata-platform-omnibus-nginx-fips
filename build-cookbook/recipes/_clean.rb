@@ -43,6 +43,6 @@ end
   /etc/init.d/nginx
   /etc/init/nginx.conf
   /lib/systemd/system/nginx.service
-].each do |f|
-  file(f) { action :delete }
+].each do |l|
+  link(l) { action :delete }
 end
