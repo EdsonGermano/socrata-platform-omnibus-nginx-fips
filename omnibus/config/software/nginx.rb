@@ -99,15 +99,13 @@ build do
     /etc/nginx/modules
   ].each do |dir|
     command "sudo mkdir -p #{dir}"
-    command "sudo touch #{File.join(dir, '.keep')}"
-    project.extra_package_file File.join(dir, '.keep')
+    project.extra_package_file dir
   end
 
   make 'install', env: env
 
   mkdir "#{install_dir}/embedded/modules"
-  touch "#{install_dir}/embedded/modules/.keep"
-  project.extra_package_file "#{install_dir}/embedded/modules/.keep"
+  project.extra_package_file "#{install_dir}/embedded/modules"
 
   # Remove the default bin dir and put a symlink to embedded/sbin/nginx in
   # sbin/nginx.

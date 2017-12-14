@@ -64,6 +64,8 @@ Omnibus::Util.class_eval do
     log.debug(log_key) { "Copying `#{source}' to `#{destination}'" }
     if File.symlink?(source)
       FileUtils.copy_entry(source, destination)
+    elsif File.directory?(source)
+      FileUtils.cp_r(source, destination)
     else
       FileUtils.cp(source, destination)
     end
