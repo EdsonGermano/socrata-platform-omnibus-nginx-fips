@@ -21,11 +21,6 @@
 
 include_recipe '::verify'
 
-# A package resource ought to work here, but something gets cached from the
-# _clean recipe where Chef thinks it's already uninstalled.
-case node['platform_family']
-when 'debian'
-  dpkg_package('nginx') { action :purge }
-when 'rhel'
-  rpm_package('nginx') { action :remove } 
+package 'nginx' do
+  action platform_family?('debian') ? :purge : :remove
 end

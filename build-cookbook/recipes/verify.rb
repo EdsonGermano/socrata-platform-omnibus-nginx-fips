@@ -19,7 +19,7 @@
 # limitations under the License.
 #
 
-include_recipe '::_clean'
+cleaner 'Pre-verify cleanup'
 
 package 'openssl'
 
