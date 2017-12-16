@@ -96,7 +96,6 @@ build do
     /etc/nginx/conf.d
     /etc/nginx/sites-available
     /etc/nginx/sites-enabled
-    /etc/nginx/modules
   ].each do |dir|
     command "sudo mkdir -p #{dir}"
     project.extra_package_file dir
@@ -106,6 +105,8 @@ build do
 
   mkdir "#{install_dir}/embedded/modules"
   project.extra_package_file "#{install_dir}/embedded/modules"
+  command "sudo ln -s #{install_dir}/embedded/modules /etc/nginx/modules"
+  project.extra_package_file '/etc/nginx/modules'
 
   # Remove the default bin dir and put a symlink to embedded/sbin/nginx in
   # sbin/nginx.
