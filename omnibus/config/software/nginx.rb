@@ -119,12 +119,10 @@ build do
   # Put symlinks to embedded/conf/* in conf/* and /etc/nginx/*..
   mkdir "#{install_dir}/conf"
   %w[
-    fastcgi.conf
     fastcgi_params
     koi-utf
     koi-win
     mime.types
-    nginx.conf
     scgi_params
     uwsgi_params
     win-utf
@@ -132,6 +130,12 @@ build do
     link "#{install_dir}/embedded/conf/#{c}", "#{install_dir}/conf/#{c}"
     command "sudo ln -s #{install_dir}/conf/#{c} /etc/nginx/#{c}"
     project.extra_package_file "/etc/nginx/#{c}"
+  end
+
+  %w[fastcgi.conf nginx.conf].each do |c|
+    command "sudo cp #{install_dir}/embedded/conf/#{c} /etc/nginx/#{c}"
+    project.extra_package_file "/etc/nginx/#{c}"
+    project.config_file "/etc/nginx/#{c}"
   end
 
   # Copy all the init scripts into the project directory.

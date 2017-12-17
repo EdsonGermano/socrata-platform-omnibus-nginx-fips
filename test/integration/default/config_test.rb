@@ -41,12 +41,10 @@ end
 end
 
 %w[
-  fastcgi.conf
   fastcgi_params
   koi-utf
   koi-win
   mime.types
-  nginx.conf
   scgi_params
   uwsgi_params
   win-utf
@@ -66,5 +64,18 @@ end
     its(:owner) { should eq('root') }
     its(:group) { should eq('root') }
     its(:mode) { should cmp('0644') }
+  end
+end
+
+%w[
+  fastcgi.conf
+  nginx.conf
+].each do |conf|
+  describe file(File.join('/etc/nginx', conf)) do
+    it { should exist }
+    its(:owner) { should eq('root') }
+    its(:group) { should eq('root') }
+    its(:mode) { should cmp('0644') }
+    its(:link_path) { should eq(nil) }
   end
 end
