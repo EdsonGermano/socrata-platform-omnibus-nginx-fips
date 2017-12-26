@@ -6,7 +6,7 @@
 # processname: nginx
 # config: /etc/nginx/nginx.conf
 # config: /etc/sysconfig/nginx
-# pidfile: /var/run/nginx.pid
+# pidfile: /run/nginx.pid
 # description: nginx is an HTTP and reverse proxy server
 #
 ### BEGIN INIT INFO
@@ -37,7 +37,7 @@ nginx=${NGINX:-/usr/sbin/nginx}
 prog=`/bin/basename $nginx`
 conffile=${CONFFILE:-/etc/nginx/nginx.conf}
 lockfile=${LOCKFILE:-/var/lock/nginx.lock}
-pidfile=${PIDFILE:-/var/run/nginx.pid}
+pidfile=${PIDFILE:-/run/nginx.pid}
 SLEEPSEC=${SLEEPSEC:-1}
 UPGRADEWAITLOOPS=${UPGRADEWAITLOOPS:-5}
 CHECKSLEEP=${CHECKSLEEP:-3}

@@ -45,7 +45,7 @@ build do
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
-    '--pid-path=/var/run/nginx.pid',
+    '--pid-path=/run/nginx.pid',
     '--lock-path=/var/lock/nginx.lock',
     '--http-log-path=/var/log/nginx/access.log',
     '--error-log-path=/var/log/nginx/error.log',
@@ -104,7 +104,6 @@ build do
   make 'install', env: env
 
   mkdir "#{install_dir}/embedded/modules"
-  project.extra_package_file "#{install_dir}/embedded/modules"
   command "sudo ln -s #{install_dir}/embedded/modules /etc/nginx/modules"
   project.extra_package_file '/etc/nginx/modules'
 
