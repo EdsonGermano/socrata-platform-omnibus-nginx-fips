@@ -39,14 +39,20 @@ build do
         target: "#{install_dir}/embedded/ssl/openssl.cnf",
         env: env
 
+  pid_file, lock_file = if File.directory?('/run')
+                          %w[/run/nginx.pid /run/lock/nginx.lock]
+                        else
+                          %w[/var/run/nginx.pid /var/lock/nginx.lock]
+                        end
+
   command [
     './configure',
     "--prefix=#{install_dir}/embedded",
     "--with-cc-opt=\"-L#{install_dir}/embedded/lib " \
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
-    '--pid-path=/run/nginx.pid',
-    '--lock-path=/run/lock/nginx.lock',
+    "--pid-path=#{pid_file}",
+    "--lock-path=#{lock_file}",
     '--http-log-path=/var/log/nginx/access.log',
     '--error-log-path=/var/log/nginx/error.log',
     '--http-client-body-temp-path=/var/cache/nginx/client_temp',
@@ -139,4 +145,6 @@ build do
 
   # Copy all the init scripts into the project directory.
   copy File.join(project.files_path, 'init'), File.join(install_dir, 'init')
+  command "sed -i -e 's,%%PID_FILE%%,#{pid_file},g' #{install_dir}/init/*/*"
+  command "sed -i -e 's,%%LOCK_FILE%%,#{lock_file},g' #{install_dir}/init/*/*"
 end

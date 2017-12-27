@@ -51,3 +51,16 @@ end
 describe send("#{svc_manager}_service", 'nginx') do
   it { should be_running }
 end
+
+pid_file = if os.redhat? && os[:release].to_i < 7
+             '/var/run/nginx.pid'
+           else
+             '/run/nginx.pid'
+           end
+
+describe file(pid_file) do
+  it { should exist }
+  its(:owner) { should eq('root') }
+  its(:group) { should eq('root') }
+  its(:mode) { should cmp('0644') }
+end
