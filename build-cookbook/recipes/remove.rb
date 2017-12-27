@@ -21,6 +21,9 @@
 
 include_recipe '::verify'
 
-package 'nginx' do
-  action platform_family?('debian') ? :purge : :remove
+case node['platform_family']
+when 'debian'
+  dpkg_package('nginx') { action :purge }
+when 'rhel'
+  rpm_package('nginx') { action :remove }
 end
