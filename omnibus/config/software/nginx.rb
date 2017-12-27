@@ -46,7 +46,7 @@ build do
                      "-I#{install_dir}/embedded/include\"",
     "--with-ld-opt=-L#{install_dir}/embedded/lib",
     '--pid-path=/run/nginx.pid',
-    '--lock-path=/var/lock/nginx.lock',
+    '--lock-path=/run/lock/nginx.lock',
     '--http-log-path=/var/log/nginx/access.log',
     '--error-log-path=/var/log/nginx/error.log',
     '--http-client-body-temp-path=/var/cache/nginx/client_temp',
