@@ -72,3 +72,11 @@ Omnibus::Util.class_eval do
     destination
   end
 end
+
+# Patch the RPM packager to not claim ownership of system directories,
+# e.g. /usr/sbin.
+Omnibus::Packager::RPM.class_eval do
+  def mark_filesystem_directories(fsdir)
+    filesystem_directories.include?(fsdir) ? '' : "%dir #{fsdir}"
+  end
+end
