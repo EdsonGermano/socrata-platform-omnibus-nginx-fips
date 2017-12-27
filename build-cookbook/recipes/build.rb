@@ -21,6 +21,8 @@
 
 cleaner 'Pre-build cleanup'
 
+package 'which' if platform_family?('rhel')
+
 include_recipe 'omnibus'
 include_recipe 'sudo'
 
