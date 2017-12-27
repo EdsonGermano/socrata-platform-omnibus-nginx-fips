@@ -48,10 +48,14 @@ exclude '**/bundler/git'
 
 package :deb do
   vendor 'Socrata, Inc <sysadmin@socrata.com>'
+  compression_level 6
+  compression_type :xz
 end
 
 package :rpm do
   vendor 'Socrata, Inc <sysadmin@socrata.com>'
+  compression_level 6
+  compression_type :xz
 end
 
 # Patch Omnibus' copy_file method to make it support symlinks instead of
