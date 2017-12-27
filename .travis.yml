@@ -20,17 +20,20 @@ install:
   - eval "$(chef shell-init bash)"
   - bundle install
 
+env:
+  - PLATFORM=ubuntu
+  - PLATFORM=centos-7
+  - PLATFORM=centos-6
+
+script:
+  - kitchen test build-$PLATFORM- && kitchen test verify-$PLATFORM && kitchen test remove-$PLATFORM
+
 stages:
+  - name: lint
   - name: test
-  - name: build
 
 jobs:
   include:
-    - stage: test
+    - stage: lint
+      env: PLATFORM=null
       script: rake
-    - stage: build
-      env:
-        - PLATFORM=ubuntu
-        - PLATFORM=centos-7
-        - PLATFORM=centos-6
-      script: kitchen test build-$PLATFORM- && kitchen test verify-$PLATFORM && kitchen test remove-$PLATFORM
