@@ -1,3 +1,7 @@
-Naming/FileName:
+Metrics/BlockLength:
   Exclude:
-    - omnibus/config/software/nginx-fips.rb
+    - omnibus/config/software/nginx.rb
+    - test/integration/default/*_test.rb
+
+Metrics/MethodLength:
+  Max: 12

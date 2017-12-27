@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-svc_manager = if command('systemctl --help').exit_status == 0
+svc_manager = if command('systemctl --help').exit_status.zero?
                 'systemd'
-              elsif command('initctl --help').exit_status == 0
+              elsif command('initctl --help').exit_status.zero?
                 'upstart'
               else
                 'sysvinit'
