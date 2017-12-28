@@ -1,0 +1,64 @@
+#!/bin/sh
+#
+# Perform necessary nginx setup steps prior to uninstalling package.
+#
+
+PROGNAME=`basename $0`
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+init_system()
+{
+  systemctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "systemd"
+    return 0
+  fi
+
+  initctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "upstart"
+    return 0
+  fi
+
+  echo "sysvinit"
+  return 0
+}
+
+delete_if_link()
+{
+  path=$1
+
+  if [ -L $path ]; then
+    rm -f $path
+  fi
+}
+
+INSTALL_DIR=/opt/nginx
+
+if [ ! -e /etc/redhat-release ] || [ "$1" = "0" ]; then
+  case $(init_system) in
+    systemd)
+      systemctl stop nginx
+      systemctl disable nginx
+      delete_if_link /lib/systemd/system/nginx.service
+    ;;
+    upstart)
+      initctl stop nginx
+      delete_if_link /etc/init/nginx.conf
+    ;;
+    sysvinit)
+      /etc/init.d/nginx stop
+      delete_if_link /etc/init.d/nginx
+    ;;
+  esac
+
+  # The Nginx processes manage some child directories within the cache dir.
+  rmdir --ignore-fail-on-non-empty /var/cache/nginx/*
+fi
+
+exit 0

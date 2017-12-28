@@ -1,44 +1,100 @@
+---
 driver:
-  name: vagrant
-  forward_agent: yes
-  customize:
-    cpus: 2
-    memory: 2048
-  synced_folders:
-    - ['.', '/home/vagrant/nginx']
+  name: dokken
+  privileged: true
+  chef_version: latest
+  binds:
+    - <%= File.expand_path('omnibus') %>:/tmp/omnibus
+
+transport:
+  name: dokken
 
 provisioner:
-  name: chef_zero
-  require_chef_omnibus: 12.4.1
+  name: dokken
+  attributes:
+    # Ohai can't find an ipaddress in Dokken
+    ipaddress: 127.0.0.1
+    omnibus:
+      build_iteration: 1
+      openssl_fips:
+        version: 2.0.16
+      # openssl:
+      #  version: 1.0.2n # 1.0.2n is already the default version
+      nginx:
+        version: 1.12.2
+        sha256: 305f379da1d5fb5aefa79e45c829852ca6983c7cd2a79328f8e084a324cf0416
+
+verifier:
+  name: inspec
+  root_path: /opt/verifier
+  sudo: true
 
 platforms:
-  - name: centos-7.1
-    run_list: yum-epel::default
-  - name: centos-6.6
-    run_list: yum-epel::default
-  - name: centos-5.11
-    run_list: yum-epel::default
-  - name: debian-7.8
-    run_list: apt::default
-  - name: debian-6.0.10
-    run_list: apt::default
-  - name: freebsd-10.1
-    run_list: freebsd::portsnap
-  - name: freebsd-9.3
-    run_list:
-      - freebsd::portsnap
-      - freebsd::pkgng
-  - name: ubuntu-14.04
-    run_list: apt::default
-  - name: ubuntu-12.04
-    run_list: apt::default
+  - name: ubuntu-builder
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /lib/systemd/systemd
+  - name: ubuntu-16.04-verifier
+    driver:
+      image: ubuntu:16.04
+      pid_one_command: /lib/systemd/systemd
+  - name: ubuntu-14.04-verifier
+    driver:
+      image: ubuntu:14.04
+      pid_one_command: /sbin/init
+      intermediate_instructions:
+        - RUN dpkg-divert --remove /sbin/initctl
+        - RUN ln -sf /sbin/initctl.distrib /sbin/initctl
+  - name: centos-7-builder
+    driver:
+      image: centos:7
+      pid_one_command: /lib/systemd/systemd
+  - name: centos-7-verifier
+    driver:
+      image: centos:7
+      pid_one_command: /lib/systemd/systemd
+  - name: centos-6-builder
+    driver:
+      image: centos:6
+      pid_one_command: /sbin/init
+      intermediate_instructions:
+        - RUN yum -y install upstart initscripts
+  - name: centos-6-verifier
+    driver:
+      image: centos:6
+      pid_one_command: /sbin/init
+      intermediate_instructions:
+        - RUN yum -y install upstart initscripts
 
 suites:
-  - name: default
-    run_list: omnibus::default
-    attributes:
-      omnibus:
-        build_user:          vagrant
-        build_user_group:    vagrant
-        build_user_password: vagrant
-        install_dir:         /opt/nginx
+  - name: build
+    run_list:
+      - recipe[build]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    excludes:
+      - ubuntu-16.04-verifier
+      - ubuntu-14.04-verifier
+      - centos-7-verifier
+      - centos-6-verifier
+  - name: verify
+    run_list:
+      - recipe[build::verify]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    excludes:
+      - ubuntu-builder
+      - centos-7-builder
+      - centos-6-builder
+  - name: remove
+    run_list:
+      - recipe[build::remove]
+    verifier:
+      inspec_tests:
+        - test/integration/remove
+    excludes:
+      - ubuntu-builder
+      - centos-7-builder
+      - centos-6-builder

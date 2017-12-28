@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# Perform necessary nginx setup steps after package is installed.
+#
+
+PROGNAME=`basename $0`
+
+error_exit()
+{
+  echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+  exit 1
+}
+
+init_system()
+{
+  systemctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "systemd"
+    return 0
+  fi
+
+  initctl --help > /dev/null 2>&1
+  if [ $? = 0 ]; then
+    echo "upstart"
+    return 0
+  fi
+
+  echo "sysvinit"
+  return 0
+}
+
+link_or_fail()
+{
+  dest=$1
+  link=$2
+
+  ln -sf $dest $link || error_exit "Cannot link $link to $dest"
+}
+
+INSTALL_DIR=/opt/nginx
+
+case $(init_system) in
+  systemd)
+    link_or_fail ${INSTALL_DIR}/init/systemd/nginx.service \
+      /lib/systemd/system/nginx.service
+  ;;
+  upstart)
+    link_or_fail ${INSTALL_DIR}/init/upstart/nginx.conf /etc/init/nginx.conf
+    initctl reload-configuration
+  ;;
+  sysvinit)
+    if [ -e /etc/redhat-release ]; then
+      family=rhel
+    elif [ -e /etc/lsb-release ]; then
+      family=debian
+    else
+      error_exit "Unsupported platform"
+    fi
+    link_or_fail ${INSTALL_DIR}/init/sysvinit/nginx.${family} /etc/init.d/nginx
+  ;;
+esac
+
+echo "Thank you for installing Nginx!"
+
+exit 0

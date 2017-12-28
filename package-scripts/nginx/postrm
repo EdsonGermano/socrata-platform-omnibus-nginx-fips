@@ -1,9 +1,0 @@
-#!/bin/sh
-#
-# Perform necessary nginx removal steps
-# after package is uninstalled.
-#
-
-echo "nginx has been uninstalled!"
-
-exit 0
