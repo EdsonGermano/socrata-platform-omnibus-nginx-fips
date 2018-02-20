@@ -39,6 +39,10 @@ build do
         target: "#{install_dir}/embedded/ssl/openssl.cnf",
         env: env
 
+  patch source: 'ngx_event_openssl.c.patch',
+        plevel: 1,
+        env: env
+
   pid_file, lock_file = if File.directory?('/run')
                           %w[/run/nginx.pid /run/lock/nginx.lock]
                         else

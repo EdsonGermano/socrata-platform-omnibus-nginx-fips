@@ -1,0 +1,15 @@
+--- a/src/event/ngx_event_openssl.c  2017-10-17 06:16:38.000000000 -0700
++++ b/src/event/ngx_event_openssl.c  2018-02-07 12:01:08.000000000 -0800
+@@ -164,6 +164,12 @@
+ #endif
+ #endif
+ 
++    if(!FIPS_mode()) {
++        ngx_ssl_error(NGX_LOG_ALERT, log, 0, "SSL FIPS mode disabled");
++    } else {
++        ngx_ssl_error(NGX_LOG_ALERT, log, 0, "SSL FIPS mode enabled");
++    }
++
+     ngx_ssl_connection_index = SSL_get_ex_new_index(0, NULL, NULL, NULL, NULL);
+ 
+     if (ngx_ssl_connection_index == -1) {
