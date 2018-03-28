@@ -22,12 +22,13 @@
 cleaner 'Pre-build cleanup'
 
 package 'which' if platform_family?('rhel')
+package 'sudo'
 
 include_recipe 'omnibus'
 include_recipe 'sudo'
 
-sudo 'Omnibus user' do
-  user node['omnibus']['build_user']
+sudo 'Omnibus' do
+  users [node['omnibus']['build_user']]
   nopasswd true
 end
 
@@ -45,11 +46,14 @@ execute 'Fix ownership of the build directory' do
 end
 
 omnibus_build 'nginx' do
+  ngx = node['omnibus']['nginx']
+
   project_dir node['omnibus']['build_dir']
   environment(OPENSSL_FIPS_VERSION: node['omnibus']['openssl_fips']['version'],
               OPENSSL_VERSION: node['omnibus']['openssl']['version'],
-              NGINX_VERSION: node['omnibus']['nginx']['version'],
-              NGINX_SHA256: node['omnibus']['nginx']['sha256'])
+              NGINX_VERSION: ngx['version'],
+              NGINX_SHA256: ngx['sha256'],
+              NGINX_BUILD_ITERATION: ngx['build_iteration'].to_s)
   live_stream true
 end
 
