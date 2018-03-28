@@ -25,7 +25,7 @@ license_file 'LICENSE'
 install_dir "#{default_root}/#{name}"
 
 build_version ENV['NGINX_VERSION']
-build_iteration ENV['OMNIBUS_BUILD_ITERATION']
+build_iteration ENV['NGINX_BUILD_ITERATION'].to_i
 
 dependency 'preparation'
 

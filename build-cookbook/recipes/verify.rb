@@ -36,7 +36,7 @@ case node['platform_family']
 when 'debian'
   dpkg_package 'nginx' do
     version = node['omnibus']['nginx']['version']
-    iteration = node['omnibus']['build_iteration']
+    iteration = node['omnibus']['nginx']['build_iteration']
 
     source File.join(node['omnibus']['staging_dir'],
                      "pkg/nginx_#{version}-#{iteration}_amd64.deb")
@@ -44,7 +44,7 @@ when 'debian'
 when 'rhel'
   rpm_package 'nginx' do
     version = node['omnibus']['nginx']['version']
-    iteration = node['omnibus']['build_iteration']
+    iteration = node['omnibus']['nginx']['build_iteration']
     rhel = node['platform_version'].to_i
 
     source File.join(node['omnibus']['staging_dir'],

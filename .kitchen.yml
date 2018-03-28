@@ -15,14 +15,14 @@ provisioner:
     # Ohai can't find an ipaddress in Dokken
     ipaddress: 127.0.0.1
     omnibus:
-      build_iteration: 1
       openssl_fips:
         version: 2.0.16
       # openssl:
-      #  version: 1.0.2n # 1.0.2n is already the default version
+      #  version: 1.0.2o # 1.0.2o is already the default version
       nginx:
         version: 1.12.2
         sha256: 305f379da1d5fb5aefa79e45c829852ca6983c7cd2a79328f8e084a324cf0416
+        build_iteration: 2
 
 verifier:
   name: inspec
